@@ -103,11 +103,39 @@ const fetchAllVehicles = async (req, res) => {
   }
 };
 
+const fetchVehicleCountByStatus = async (req, res) => {
+  try {
+    const vehicleCounts = await Vehicle.aggregate([
+      {
+        $match: { isDeleted: false } 
+      },
+      {
+        $group: {
+          _id: "$status",  
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+    if (vehicleCounts.length === 0) {
+      return Response.fail(res, "No vehicles found");
+    }
+    const result = vehicleCounts.map(item => ({
+      status: item._id,
+      count: item.count
+    }));
+
+    return Response.success(res, "Vehicle count by status", result);
+  } catch (err) {
+    return Response.error(res, "Fetching vehicle count by status failed", err);
+  }
+};
+
 
 module.exports = {
   createVehicle,
   updateVehicle,
   deleteVehicle,
   listVehicles,
-  fetchAllVehicles
+  fetchAllVehicles,
+  fetchVehicleCountByStatus
 };

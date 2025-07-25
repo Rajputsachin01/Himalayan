@@ -7,5 +7,6 @@ router.post("/update/:id", isAuth, VehicleController.updateVehicle);
 router.post("/delete/:id", isAuth, VehicleController.deleteVehicle);
 router.post("/listingVehicles", isAuth, VehicleController.listVehicles);
 router.post("/fetchAll", isAuth, VehicleController.fetchAllVehicles);
+router.post("/fetchCounts", isAuth, VehicleController.fetchVehicleCountByStatus);
 
 module.exports = router;
